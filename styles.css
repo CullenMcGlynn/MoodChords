@@ -6,7 +6,7 @@
   }
   
   body {
-    background-color: #ffffff;
+    background-color: #D9E5FA;
     color: #000000;
     min-height: 100vh;
     display: flex;
@@ -91,8 +91,8 @@
   }
   
   .pill-button.selected {
-    background-color: #c97725;
-    color: #ffffff;
+    background-color: #FFD6AD;
+    color: #000;
   }
 
   
@@ -242,6 +242,40 @@
     
   }
 
+
+  #generate-button {
+    padding: 10px 20px;
+    padding-bottom: 14px;
+    border: 0;
+    font-size: 16px;
+    transition: all 150ms ease-in-out;
+  
+    border-radius: 20px;
+    height: 42px;
+    width: fit-content;
+    text-align: center;
+    justify-content: center;
+  
+    color: #fff;
+    background: #333333;
+    box-shadow: rgba(99, 99, 99, 0.1) 0 2px 8px 0, inset 0px -3px 0px rgba(0, 0, 0, 1), inset 0px -1.5px 0px rgba(0, 0, 0, 1);
+  }
+  
+  #generate-button:hover {
+    filter: brightness(0.98);
+  }
+  
+  #generate-button:active {
+    filter: brightness(0.97);
+    top: 4px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    box-shadow: rgba(99, 99, 99, 0.1) 0 2px 6px 0, inset 0px -1px 0px rgba(0, 0, 0, 0.15);
+  }
+
+
+
+
   .happy.selected {
     background-color: #D9FFE2;
     color: black;
@@ -258,12 +292,12 @@
   }
 
     .chill.selected {
-        background-color: #B2E4FF;
+        background-color: #D7F1FF;
         color: black;
     }
 
     .epic.selected {
-        background-color: #FFB7C6;
+        background-color: #FFD0D9;
         color: black;
     }
 
