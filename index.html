@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoodChord</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://use.typekit.net/qee8uxp.css">
+</head>
+<body>
+  <main class="container">
+    <h1 class="app-title">MoodChord</h1>
+    <div class="app-container">
+      <div class="app-content">
+        <div class="controls-section">
+          <div class="key-section">
+            <h2 class="section-title">Key</h2>
+            <div class="key-buttons">
+              <button class="pill-button key-button selected button-36" data-key="Any">Any Key</button>
+              <button class="pill-button key-button button-36" data-key="A">A</button>
+              <button class="pill-button key-button button-36" data-key="B">B</button>
+              <button class="pill-button key-button button-36" data-key="C">C</button>
+              <button class="pill-button key-button button-36" data-key="D">D</button>
+              <button class="pill-button key-button button-36" data-key="E">E</button>
+              <button class="pill-button key-button button-36" data-key="F">F</button>
+              <button class="pill-button key-button button-36" data-key="G">G</button>
+            </div>
+          </div>
+          
+          <div class="mood-section">
+            
+            <h2 class="section-title">Mood</h2>
+            <div class="mood-buttons">
+              <button class="pill-button mood-button button-40 happy" data-mood="Happy">Happy</button>
+              <button class="pill-button mood-button button-40 sad" data-mood="Sad">Sad</button>
+              <button class="pill-button mood-button button-40 nostalgic" data-mood="Nostalgic">Nostalgic</button>
+              <button class="pill-button mood-button button-40 chill" data-mood="Chill">Chill</button>
+              <button class="pill-button mood-button button-40 epic" data-mood="Epic">Epic</button>
+            </div>
+            <div class="progression-container">
+                <div class="progression-display">
+                  <div id="key-display" class="key-display">C major</div>
+                  
+                  <div class="chord-grid">
+                    <!-- Chords will be inserted here by JavaScript -->
+                  </div>
+                </div>
+                
+                <div class="action-buttons">
+                  <button id="generate-button" class="pill-button action-button">
+                    New Progression <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+                  </button>
+                </div>
+              </div>
+          </div>
+        </div>
+        
+       
+      </div>
+    </div>
+  </main>
+  
+  <script src="script.js"></script>
+</body>
+</html>
