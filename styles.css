@@ -507,19 +507,4 @@
       width: auto;
     }
 }
-
-@media (hover: none) {
-    /* This targets devices that don't support hover */
-    .theme-button:hover,
-    .pill-button:hover {
-      /* Reset all hover styles */
-      all: unset;
-      /* Restore basic styling */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 9999px;
-      cursor: pointer;
-    }
-}
   }
