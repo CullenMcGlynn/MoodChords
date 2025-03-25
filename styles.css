@@ -2,8 +2,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Gilroy, Inter, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
+    font-family: 'Inter', Inter, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+
+}
+
+
   
   body {
     background-color: #D9E5FA;
@@ -275,9 +279,9 @@
 
   #generate-button {
     padding: 10px 20px;
-    padding-bottom: 14px;
+    padding-bottom: 12px;
     border: 0;
-    font-size: 15px;
+    font-size: 14px;
     transition: all 150ms ease-in-out;
   
     border-radius: 20px;
