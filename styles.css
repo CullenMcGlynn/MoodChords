@@ -335,6 +335,57 @@
         color: black;
     }
 
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+
+
+
+    .theme-selector {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      
+      .theme-button {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1.5px solid #848484;
+        cursor: pointer;
+        transition: transform 0.2s, border-color 0.2s;
+      }
+      
+      .theme-button:hover {
+        transform: scale(1);
+      }
+      
+      .theme-button.active {
+        border-color: #616161;
+        transform: scale(1);
+      }
+      
+      .theme-white {
+        background-color: #FFD6AD;
+      }
+      
+      .theme-gray {
+        background-color: #FFD0D9;
+      }
+      
+      .theme-blue {
+        background-color: #D9E5FA;
+      }
+      
+      .theme-purple {
+        background-color: #E3FFDF;
+      }
+
 
 
 
@@ -343,8 +394,18 @@
   @media (max-width: 768px) {
 
     .app-title {
-        margin-bottom: 16px;
+        margin-bottom: 12px;
         font-size: 24px;
+    }
+
+    .theme-selector {
+        margin-bottom: 12px;
+    }
+
+
+
+    .header {
+        padding: 0px 12px;
     }
 
     .controls-section {
@@ -377,7 +438,7 @@
     }
 
     .chord-grid {
-        padding-bottom: 20px;
+        padding-bottom: 16px;
     }
 
     .mood-right {
@@ -387,7 +448,7 @@
     
     .progression-display {
         margin-bottom: 0;
-        height: 290px;
+        height: 260px;
     }
 
     .mood-section {
@@ -396,11 +457,22 @@
 
     .app-container {
         padding: 1.5rem;
-        height: 90vh;
-    }
 
   }
+
+  .button-40:hover {
+    filter: none;
+  }
+
+  .button-36:hover {
+    filter: none;
+  }
+
+  #generate-button:hover {
+    filter: none;
+  }
   
+
   @media (max-width: 480px) {
     .app-container {
       padding: 1.5rem;
@@ -409,4 +481,8 @@
     .key-button {
       width: auto;
     }
+
+
+
+}
   }

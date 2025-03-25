@@ -395,5 +395,64 @@ function getRealChord(romanNumeral) {
   }
 }
 
+const themes = {
+    white: '#FFD6AD',
+    gray: '#FFD0D9',
+    blue: '#D9E5FA',
+    purple: '#E3FFDF'
+  };
+  
+  // DOM elements
+  const themeButtons = document.querySelectorAll('.theme-button');
+  
+  // Initialize theme
+  function initTheme() {
+    // Check if a theme is saved in localStorage
+    const savedTheme = localStorage.getItem('moodChordTheme');
+    if (savedTheme && themes[savedTheme]) {
+      setTheme(savedTheme);
+    }
+  }
+  
+  // Set theme
+  function setTheme(themeName) {
+    // Set background color
+    document.body.style.backgroundColor = themes[themeName];
+    
+    // Update active button
+    themeButtons.forEach(button => {
+      if (button.dataset.theme === themeName) {
+        button.classList.add('active');
+      } else {
+        button.classList.remove('active');
+      }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('moodChordTheme', themeName);
+  }
+  
+  // Add event listeners to theme buttons
+  themeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const themeName = button.dataset.theme;
+      setTheme(themeName);
+    });
+  });
+  
+  // Initialize theme on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    
+    // Add this to the existing init function if needed
+    if (typeof init === 'function') {
+      const originalInit = init;
+      init = function() {
+        originalInit();
+        initTheme();
+      };
+    }
+  });
+
 // Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
