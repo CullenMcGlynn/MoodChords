@@ -342,11 +342,6 @@
   /* Responsive styles */
   @media (max-width: 768px) {
 
-    * {
-        font-family: Gilroy, Roboto, "Segoe UI", "cofo-sans-pixel", Helvetica, Arial, sans-serif;
-
-    }
-
     .controls-section {
       flex-direction: column;
       gap: 2rem;
