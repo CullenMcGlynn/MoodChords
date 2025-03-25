@@ -454,5 +454,37 @@ const themes = {
     }
   });
 
+  function isMobileView() {
+    return window.innerWidth < 768;
+  }
+  
+  // Function to handle hover effects based on screen size
+  function handleHoverEffects() {
+    const allButtons = document.querySelectorAll('.pill-button, .theme-button .button-36');
+    
+    if (isMobileView()) {
+      // Disable hover effects on mobile
+      allButtons.forEach(button => {
+        // Remove any hover-related event listeners
+        button.onmouseenter = null;
+        button.onmouseleave = null;
+        
+        // Add a class that can be targeted in CSS
+        button.classList.add('no-hover');
+      });
+    } else {
+      // Re-enable hover effects on desktop
+      allButtons.forEach(button => {
+        button.classList.remove('no-hover');
+      });
+    }
+  }
+  
+  // Run on page load
+  document.addEventListener('DOMContentLoaded', handleHoverEffects);
+  
+  // Run when window is resized
+  window.addEventListener('resize', handleHoverEffects);
+
 // Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', init);

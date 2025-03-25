@@ -394,14 +394,13 @@
   @media (max-width: 768px) {
 
     .app-title {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         font-size: 24px;
     }
 
     .theme-selector {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
-
 
 
     .header {
@@ -425,7 +424,7 @@
     }
 
     .key-right {
-        gap: 12px;
+        gap: 8px;
     }
     
     .mood-buttons {
@@ -443,12 +442,12 @@
 
     .mood-right {
         flex-direction: column-reverse;
-        gap: 12px;
+        gap: 8px;
     }
     
     .progression-display {
         margin-bottom: 0;
-        height: 260px;
+        height: 248px;
     }
 
     .mood-section {
@@ -456,16 +455,42 @@
     }
 
     .app-container {
-        padding: 1.5rem;
+        padding: 1.3rem;
 
+  }
+
+   .pill-button {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 14px;
+    border: none;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    height: 40px;
+  }
+  
+  .pill-button:hover {
+    background-color: none !important;
+    transform: none !important; /* Prevent any transform effects */
+  }
+
+  .button-40 {
+    font-size: 14px;
   }
 
   .button-40:hover {
     filter: none;
+    background-color: none !important;
+    transform: none !important;
   }
 
   .button-36:hover {
-    filter: none;
+    transform: none;
+  }
+
+  #generate-button {
+    height: 40px;
   }
 
   #generate-button:hover {
@@ -481,8 +506,20 @@
     .key-button {
       width: auto;
     }
+}
 
-
-
+@media (hover: none) {
+    /* This targets devices that don't support hover */
+    .theme-button:hover,
+    .pill-button:hover {
+      /* Reset all hover styles */
+      all: unset;
+      /* Restore basic styling */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      cursor: pointer;
+    }
 }
   }
