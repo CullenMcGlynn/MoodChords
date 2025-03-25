@@ -342,9 +342,15 @@
   /* Responsive styles */
   @media (max-width: 768px) {
 
+    .app-title {
+        margin-bottom: 16px;
+        font-size: 24px;
+    }
+
     .controls-section {
       flex-direction: column;
-      gap: 2rem;
+      gap: 12px;
+
     }
     
     .key-buttons {
@@ -354,6 +360,11 @@
 
     .key-section {
         width: 100%;
+        padding: 16px;
+    }
+
+    .key-right {
+        gap: 12px;
     }
     
     .mood-buttons {
@@ -365,10 +376,29 @@
         flex-direction: column-reverse;
     }
 
+    .chord-grid {
+        padding-bottom: 20px;
+    }
+
     .mood-right {
         flex-direction: column-reverse;
+        gap: 12px;
     }
     
+    .progression-display {
+        margin-bottom: 0;
+        height: 290px;
+    }
+
+    .mood-section {
+        padding: 16px;
+    }
+
+    .app-container {
+        padding: 1.5rem;
+        height: 90vh;
+    }
+
   }
   
   @media (max-width: 480px) {
