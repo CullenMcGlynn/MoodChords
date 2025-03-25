@@ -81,12 +81,13 @@ const MOOD_PROGRESSIONS = {
   }
 };
 
+
 // App state
 let state = {
   key: null, // No key selected by default
   isMinor: false,
   currentProgression: [],
-  mood: "Nostalgic",
+  mood: "",
   actualKey: "C", // The actual key used for the progression
   keySelected: false // Track whether a key is selected
 };
