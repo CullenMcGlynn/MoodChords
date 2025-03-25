@@ -1,5 +1,5 @@
 // Define all possible keys
-const KEYS = ["Any", "A", "B", "C", "D", "E", "F", "G"];
+const KEYS = ["A", "B", "C", "D", "E", "F", "G"];
 
 // Common chord progressions (as roman numerals)
 const COMMON_PROGRESSIONS = {
@@ -83,11 +83,12 @@ const MOOD_PROGRESSIONS = {
 
 // App state
 let state = {
-  key: "Any",
+  key: null, // No key selected by default
   isMinor: false,
   currentProgression: [],
   mood: "Nostalgic",
-  actualKey: "C"
+  actualKey: "C", // The actual key used for the progression
+  keySelected: false // Track whether a key is selected
 };
 
 // DOM Elements
@@ -113,18 +114,24 @@ function setupEventListeners() {
     button.addEventListener('click', () => {
       const key = button.dataset.key;
       
-      // Update selection
-      state.key = key;
-      keyButtons.forEach(btn => {
-        if (btn.dataset.key === key) {
-          btn.classList.add('selected');
-        } else {
-          btn.classList.remove('selected');
-        }
-      });
-      
-      if (state.key !== "Any") {
-        state.actualKey = state.key;
+      // Toggle selection - if the clicked key is already selected, deselect it
+      if (state.key === key && state.keySelected) {
+        state.key = null;
+        state.keySelected = false;
+        button.classList.remove('selected');
+      } else {
+        // Otherwise, select the new key and deselect others
+        state.key = key;
+        state.keySelected = true;
+        state.actualKey = key; // Set the actual key to match the selected key
+        
+        keyButtons.forEach(btn => {
+          if (btn.dataset.key === key) {
+            btn.classList.add('selected');
+          } else {
+            btn.classList.remove('selected');
+          }
+        });
       }
       
       // Update the display
@@ -212,23 +219,24 @@ function generateProgression() {
     const randomIndex = Math.floor(Math.random() * progressionPool.length);
     newProgression = progressionPool[randomIndex];
     
-    // If "Any" key is selected, randomly choose a key for the actual progression
-    if (state.key === "Any") {
-      const randomKeyIndex = Math.floor(Math.random() * (KEYS.length - 1)) + 1; // Skip "Any"
+    // If no key is selected, choose a random key
+    if (!state.keySelected) {
+      const randomKeyIndex = Math.floor(Math.random() * KEYS.length);
       newKey = KEYS[randomKeyIndex];
     } else {
+      // Otherwise use the selected key
       newKey = state.key;
     }
     
     attempts++;
     
     // If we've tried 10 times and still can't get a different progression,
-    // force a different key if possible
+    // force a different key if no specific key is selected
     if (attempts >= 10 && areProgressionsSame(oldProgression, newProgression)) {
-      if (state.key === "Any") {
+      if (!state.keySelected) {
         // Force a different key
         let currentKeyIndex = KEYS.indexOf(newKey);
-        newKey = KEYS[(currentKeyIndex % (KEYS.length - 1)) + 1]; // Skip "Any"
+        newKey = KEYS[(currentKeyIndex + 1) % KEYS.length];
       }
       break;
     }
@@ -297,9 +305,9 @@ function renderChords() {
 
 // Convert roman numeral to actual chord based on key and mode
 function getRealChord(romanNumeral) {
-  // Use actualKey instead of key for chord calculation
+  // Use actualKey for chord calculation
   const keyIndex = KEYS.indexOf(state.actualKey);
-  if (keyIndex <= 0) return romanNumeral; // Handle invalid key
+  if (keyIndex < 0) return romanNumeral; // Handle invalid key
   
   // Define scale degrees for major and minor
   const majorScaleDegrees = [0, 2, 4, 5, 7, 9, 11];
@@ -376,7 +384,7 @@ function getRealChord(romanNumeral) {
     
     // Calculate the note index in the new key
     noteIndex = (cMajorScale[degree] + offset) % 7;
-    const noteName = KEYS[noteIndex + 1]; // +1 because KEYS includes "Any"
+    const noteName = KEYS[noteIndex];
     
     // Format the chord name
     if (chordType === "maj") return noteName;
