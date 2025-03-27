@@ -81,7 +81,6 @@ const MOOD_PROGRESSIONS = {
   }
 };
 
-
 // App state
 let state = {
   key: null, // No key selected by default
@@ -93,14 +92,21 @@ let state = {
 };
 
 // DOM Elements
-const keyButtons = document.querySelectorAll('.key-button');
-const moodButtons = document.querySelectorAll('.mood-button');
-const generateButton = document.getElementById('generate-button');
-const chordGrid = document.querySelector('.chord-grid');
-const keyDisplay = document.getElementById('key-display');
+let keyButtons;
+let moodButtons;
+let generateButton;
+let chordGrid;
+let keyDisplay;
 
 // Initialize the app
 function init() {
+  // Get DOM elements
+  keyButtons = document.querySelectorAll('.key-button');
+  moodButtons = document.querySelectorAll('.mood-button');
+  generateButton = document.getElementById('generate-button');
+  chordGrid = document.querySelector('.chord-grid');
+  keyDisplay = document.getElementById('key-display');
+  
   // Set up event listeners
   setupEventListeners();
   
@@ -172,7 +178,7 @@ function setupEventListeners() {
 
 // Helper function to check if two progressions are the same
 function areProgressionsSame(prog1, prog2) {
-  if (prog1.length !== prog2.length) return false;
+  if (!prog1 || !prog2 || prog1.length !== prog2.length) return false;
   
   for (let i = 0; i < prog1.length; i++) {
     if (prog1[i] !== prog2[i]) return false;
@@ -218,7 +224,7 @@ function generateProgression() {
   
   do {
     const randomIndex = Math.floor(Math.random() * progressionPool.length);
-    newProgression = progressionPool[randomIndex];
+    newProgression = [...progressionPool[randomIndex]]; // Create a copy
     
     // If no key is selected, choose a random key
     if (!state.keySelected) {
@@ -250,6 +256,26 @@ function generateProgression() {
   // Update the state with the new progression and key
   state.currentProgression = newProgression;
   state.actualKey = newKey;
+  
+  // Make sure the progression is appropriate for the mode
+  // If we're in minor mode, ensure we're using progressions with lowercase roman numerals for the tonic
+  if (state.isMinor) {
+    // Convert major chords to minor where appropriate for minor key
+    for (let i = 0; i < state.currentProgression.length; i++) {
+      if (state.currentProgression[i] === "I") {
+        state.currentProgression[i] = "i";
+      }
+      // Other adjustments could be made here if needed
+    }
+  } else {
+    // Convert minor chords to major where appropriate for major key
+    for (let i = 0; i < state.currentProgression.length; i++) {
+      if (state.currentProgression[i] === "i") {
+        state.currentProgression[i] = "I";
+      }
+      // Other adjustments could be made here if needed
+    }
+  }
   
   renderProgression();
   updateKeyDisplay();
@@ -306,155 +332,154 @@ function renderChords() {
 
 // Convert roman numeral to actual chord based on key and mode
 function getRealChord(romanNumeral) {
-  // Use actualKey for chord calculation
-  const keyIndex = KEYS.indexOf(state.actualKey);
-  if (keyIndex < 0) return romanNumeral; // Handle invalid key
+  if (!romanNumeral) return "";
   
-  // Define scale degrees for major and minor
-  const majorScaleDegrees = [0, 2, 4, 5, 7, 9, 11];
-  const minorScaleDegrees = [0, 2, 3, 5, 7, 8, 10];
+  // Define all notes in the chromatic scale
+  const chromaticScale = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   
-  const scaleDegrees = state.isMinor ? minorScaleDegrees : majorScaleDegrees;
-  
-  let degree = 0;
-  let chordType = "";
-  
-  // Parse the roman numeral
-  if (romanNumeral === "I" || romanNumeral === "i") {
-    degree = 0;
-    chordType = romanNumeral === "I" ? "maj" : "min";
-  } else if (romanNumeral === "II" || romanNumeral === "ii") {
-    degree = 1;
-    chordType = romanNumeral === "II" ? "maj" : "min";
-  } else if (romanNumeral === "III" || romanNumeral === "iii") {
-    degree = 2;
-    chordType = romanNumeral === "III" ? "maj" : "min";
-  } else if (romanNumeral === "IV" || romanNumeral === "iv") {
-    degree = 3;
-    chordType = romanNumeral === "IV" ? "maj" : "min";
-  } else if (romanNumeral === "V" || romanNumeral === "v") {
-    degree = 4;
-    chordType = romanNumeral === "V" ? "maj" : "min";
-  } else if (romanNumeral === "VI" || romanNumeral === "vi") {
-    degree = 5;
-    chordType = romanNumeral === "VI" ? "maj" : "min";
-  } else if (romanNumeral === "VII" || romanNumeral === "vii") {
-    degree = 6;
-    chordType = romanNumeral === "VII" ? "maj" : "min";
+  // Get the index of the key in the chromatic scale
+  let keyIndex = 0;
+  switch(state.actualKey) {
+    case "C": keyIndex = 0; break;
+    case "D": keyIndex = 2; break;
+    case "E": keyIndex = 4; break;
+    case "F": keyIndex = 5; break;
+    case "G": keyIndex = 7; break;
+    case "A": keyIndex = 9; break;
+    case "B": keyIndex = 11; break;
+    default: keyIndex = 0;
   }
   
-  // In minor keys, adjust the chord types
-  if (state.isMinor) {
-    if (romanNumeral === "i") chordType = "min";
-    if (romanNumeral === "ii") chordType = "dim";
-    if (romanNumeral === "III") chordType = "maj";
-    if (romanNumeral === "iv") chordType = "min";
-    if (romanNumeral === "v") chordType = "min";
-    if (romanNumeral === "VI") chordType = "maj";
-    if (romanNumeral === "VII") chordType = "maj";
-  } else {
-    if (romanNumeral === "I") chordType = "maj";
-    if (romanNumeral === "ii") chordType = "min";
-    if (romanNumeral === "iii") chordType = "min";
-    if (romanNumeral === "IV") chordType = "maj";
-    if (romanNumeral === "V") chordType = "maj";
-    if (romanNumeral === "vi") chordType = "min";
-    if (romanNumeral === "vii") chordType = "dim";
-  }
+  // Define the intervals for major and minor scales (semitones from the root)
+  const majorScaleIntervals = [0, 2, 4, 5, 7, 9, 11];
+  const minorScaleIntervals = [0, 2, 3, 5, 7, 8, 10];
   
-  // Calculate the chord root note based on the key and scale degree
-  let noteIndex;
-  if (state.actualKey === "C") {
-    const notes = ["C", "D", "E", "F", "G", "A", "B"];
-    noteIndex = degree % 7;
-    const noteName = notes[noteIndex];
-    
-    // Format the chord name
-    if (chordType === "maj") return noteName;
-    if (chordType === "min") return noteName.toLowerCase();
-    if (chordType === "dim") return `${noteName.toLowerCase()}°`;
-    
-    return noteName;
-  } else {
-    // For other keys, calculate the offset from C
-    const cIndex = KEYS.indexOf("C");
-    const offset = (keyIndex - cIndex + 7) % 7;
-    
-    // C major scale: C, D, E, F, G, A, B
-    const cMajorScale = [0, 1, 2, 3, 4, 5, 6];
-    
-    // Calculate the note index in the new key
-    noteIndex = (cMajorScale[degree] + offset) % 7;
-    const noteName = KEYS[noteIndex];
-    
-    // Format the chord name
-    if (chordType === "maj") return noteName;
-    if (chordType === "min") return noteName.toLowerCase();
-    if (chordType === "dim") return `${noteName.toLowerCase()}°`;
-    
-    return noteName;
-  }
-}
-
-const themes = {
-    white: '#FFD6AD',
-    gray: '#FFD0D9',
-    blue: '#D9E5FA',
-    purple: '#E3FFDF'
-  };
+  // Choose the appropriate scale based on the mode
+  const scaleIntervals = state.isMinor ? minorScaleIntervals : majorScaleIntervals;
   
-  // DOM elements
-  const themeButtons = document.querySelectorAll('.theme-button');
+  // Determine the scale degree from the roman numeral
+  let scaleDegree = 0;
+  const romanNumeralUpper = romanNumeral.toUpperCase();
   
-  // Initialize theme
-  function initTheme() {
-    // Check if a theme is saved in localStorage
-    const savedTheme = localStorage.getItem('moodChordTheme');
-    if (savedTheme && themes[savedTheme]) {
-      setTheme(savedTheme);
+  if (romanNumeralUpper === "I") scaleDegree = 0;
+  else if (romanNumeralUpper === "II") scaleDegree = 1;
+  else if (romanNumeralUpper === "III") scaleDegree = 2;
+  else if (romanNumeralUpper === "IV") scaleDegree = 3;
+  else if (romanNumeralUpper === "V") scaleDegree = 4;
+  else if (romanNumeralUpper === "VI") scaleDegree = 5;
+  else if (romanNumeralUpper === "VII") scaleDegree = 6;
+  
+  // Calculate the note index in the chromatic scale
+  const noteIndex = (keyIndex + scaleIntervals[scaleDegree]) % 12;
+  const noteName = chromaticScale[noteIndex];
+  
+  // Determine if the chord is major, minor, or diminished
+  let chordType;
+  
+  // Check if the roman numeral is uppercase (major) or lowercase (minor)
+  const isUpperCase = romanNumeral === romanNumeralUpper;
+  
+  // In major keys
+  if (!state.isMinor) {
+    if (scaleDegree === 0 || scaleDegree === 3 || scaleDegree === 4) {
+      // I, IV, V are major in major keys
+      chordType = "maj";
+    } else if (scaleDegree === 1 || scaleDegree === 2 || scaleDegree === 5) {
+      // ii, iii, vi are minor in major keys
+      chordType = "min";
+    } else if (scaleDegree === 6) {
+      // vii is diminished in major keys
+      chordType = "dim";
+    } else {
+      // Default based on case
+      chordType = isUpperCase ? "maj" : "min";
+    }
+  } 
+  // In minor keys
+  else {
+    if (scaleDegree === 0 || scaleDegree === 3 || scaleDegree === 4) {
+      // i, iv, v are minor in minor keys
+      chordType = "min";
+    } else if (scaleDegree === 2 || scaleDegree === 5 || scaleDegree === 6) {
+      // III, VI, VII are major in minor keys
+      chordType = "maj";
+    } else if (scaleDegree === 1) {
+      // ii is diminished in minor keys
+      chordType = "dim";
+    } else {
+      // Default based on case
+      chordType = isUpperCase ? "maj" : "min";
     }
   }
   
-  // Set theme
-  function setTheme(themeName) {
-    // Set background color
-    document.body.style.backgroundColor = themes[themeName];
-    
-    // Update active button
-    themeButtons.forEach(button => {
-      if (button.dataset.theme === themeName) {
-        button.classList.add('active');
-      } else {
-        button.classList.remove('active');
-      }
-    });
-    
-    // Save to localStorage
-    localStorage.setItem('moodChordTheme', themeName);
+  // Format the chord name based on the chord type
+  if (chordType === "maj") {
+    return noteName;
+  } else if (chordType === "min") {
+    return noteName.toLowerCase();
+  } else if (chordType === "dim") {
+    return `${noteName.toLowerCase()}°`;
   }
   
-  // Add event listeners to theme buttons
+  return noteName;
+}
+
+// Theme handling
+const themes = {
+  white: '#FFD6AD',
+  gray: '#FFD0D9',
+  blue: '#D9E5FA',
+  purple: '#E3FFDF'
+};
+
+// DOM elements for themes
+let themeButtons;
+
+// Initialize theme
+function initTheme() {
+  themeButtons = document.querySelectorAll('.theme-button');
+  
+  // Check if a theme is saved in localStorage
+  const savedTheme = localStorage.getItem('moodChordTheme');
+  if (savedTheme && themes[savedTheme]) {
+    setTheme(savedTheme);
+  } else {
+    // Default to white theme if none saved
+    setTheme('white');
+  }
+}
+
+// Set theme
+function setTheme(themeName) {
+  // Set background color
+  document.body.style.backgroundColor = themes[themeName];
+  
+  // Update active button
+  themeButtons.forEach(button => {
+    if (button.dataset.theme === themeName) {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  });
+  
+  // Save to localStorage
+  localStorage.setItem('moodChordTheme', themeName);
+}
+
+// Add event listeners to theme buttons
+function setupThemeListeners() {
   themeButtons.forEach(button => {
     button.addEventListener('click', () => {
       const themeName = button.dataset.theme;
       setTheme(themeName);
     });
   });
-  
-  // Initialize theme on page load
-  document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-    
-    // Add this to the existing init function if needed
-    if (typeof init === 'function') {
-      const originalInit = init;
-      init = function() {
-        originalInit();
-        initTheme();
-      };
-    }
-  });
+}
 
-
-// Initialize the app when the DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+// Initialize everything when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  initTheme();
+  setupThemeListeners();
+});
